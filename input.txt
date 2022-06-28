@@ -1,0 +1,7 @@
+x:int=2
+letter:char='34'
+x=x*2
+y:float=1
+
+display:"%d%s",x,letter
+display:"%d",y
