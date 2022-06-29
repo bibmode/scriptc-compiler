@@ -6,7 +6,6 @@
 int iTemp;
 char strTemp[200];
 
-
 %}
 
 %option yylineno
@@ -17,12 +16,18 @@ char strTemp[200];
 "int"                               {yylval.s = strdup(yytext); return INT;}
 "float"                             {yylval.s = strdup(yytext); return FLOAT;}
 "char"                              {yylval.s = strdup(yytext); return CHAR;}
-%d|%f                               {yylval.s = strdup(yytext); return NUM_SPECIFIER;}
-%c|%s                               {yylval.c = strdup(yytext); return LET_SPECIFIER;}
                              
 [-]?[0-9]+                          {sscanf(yytext, "%d", &iTemp); yylval.i = iTemp; return INTEGERS;}
 [-]?[0-9]+\.[0-9]+                  {yylval.f = atof(yytext); return DECIMALS;}       
 [a-zA-Z_]+                          {yylval.s = strdup(yytext); return IDENTIFIER;}
+\"([^"]|\\\")*\"                    {
+                                        yylval.s = strdup(yytext+1);
+                                        if (yylval.s[yyleng-2] != '"')
+                                            yyerror("improperly terminated string");
+                                        else
+                                            yylval.s[yyleng-2] = 0;
+                                        return STRING;
+                                    }
 
 \'.*\'                              {
                                           yylval.c = strdup(yytext+1);

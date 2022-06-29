@@ -7,17 +7,31 @@
 #define YYERROR_VERBOSE 1
 
 extern int yylex();
-extern void yyerror (const char *s);
+extern void yyerror (const char *errorSTR);
 extern yylineno;
 
 %}
-%union {int i; float f; char* s; char* c;}     
+
+%code requires {
+	struct nodeVals{
+			float numbers[100];
+			int numbersLen;
+			char *strings[100];
+			int stringsLen;
+	};
+}
+
+%union {
+	int i; float f; char* s; char* c;
+	struct nodeVals p;
+}     
 
     /* Yacc definitions */
 
-%token <s> display IDENTIFIER <s> NUM_SPECIFIER NEWLINE INT CHAR FLOAT <i> INTEGERS <f> DECIMALS <c> CHARACTER LET_SPECIFIER
-%type <f> expr term factor values 
-%type <s> type str
+%token <s> display IDENTIFIER STRING NEWLINE INT CHAR FLOAT <i> INTEGERS <f> DECIMALS <c> CHARACTER 
+%type <f> expr term factor values
+%type <s> type str print 
+%type <p> printVals 
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
@@ -29,8 +43,7 @@ program		:	commands
 
 commands	:	numVar_statements
 			|	letVar_statements
-			|	numPrint_statements
-			|	letPrint_statements
+			|	print
 			|	NEWLINE															{line++;}
 			;
 
@@ -50,15 +63,27 @@ type		:	INT																{$$ = $1;}
 			;
 
 /* expected inputs for the print statement */
-numPrint_statements		:	display ':' '"' NUM_SPECIFIER '"' ',' expr							{oneNumValPrint($4,$7);}
-						|	display ':' '"' NUM_SPECIFIER NUM_SPECIFIER '"' ',' expr ',' expr	{twoNumValPrint($4,$5,$8,$10);}
-						;
+print :	display ':' STRING         						{printValues($3);}
+			| display ':' STRING printVals 					{printStruct($3, $4.numbers, $4.strings, $4.numbersLen, $4.stringsLen);}
+			;
 
-letPrint_statements		:	display ':' '"' LET_SPECIFIER '"' ',' str							{oneCharValPrint($4,$7);}
-						|	display ':' '"' LET_SPECIFIER LET_SPECIFIER '"' ',' str	',' str		{twoCharValPrint($4,$5,$8,$10);}
-						|	display ':' '"' NUM_SPECIFIER LET_SPECIFIER '"' ',' expr ',' str	{NumCharValPrint($4,$5,$8,$10);}
-						|	display ':' '"' LET_SPECIFIER NUM_SPECIFIER '"' ',' str	',' expr	{CharNumValPrint($4,$5,$8,$10);}
-						;
+printVals : ',' expr							{
+																		$$.numbers[$$.numbersLen] = $2;
+																		$$.numbersLen++;
+																	}
+				  | ',' str   						{
+																		$$.strings[$$.stringsLen] = $2;
+																		$$.stringsLen++;
+																	}
+				  | printVals ',' expr    {
+																		$$.numbers[$$.numbersLen] = $3;
+																		$$.numbersLen++;
+																	}
+					| printVals ',' str			{
+																		$$.strings[$$.stringsLen] = $3;
+																		$$.stringsLen++;
+																	}
+					;
 
 /* expected inputs for the arithmetic statement */
 expr    	:	term															{$$ = $1;}
@@ -76,14 +101,16 @@ factor		:	values															{$$ = $1;}
 			;
 
 /* term can be either int or float or variable holding the value */
-values		:	IDENTIFIER														{$$ = checkThisNumVar($1);}
-			|	INTEGERS														{$$ = $1;}
-			|	DECIMALS														{$$ = $1;}
-			;
+values	:	IDENTIFIER												{$$ = checkThisNumVar($1);}
+			  |	INTEGERS													{$$ = $1;}
+		  	|	DECIMALS													{$$ = $1;}
+		    ;
 
-str			:	IDENTIFIER														{$$ = checkThisCharVar($1);}
-			|	CHARACTER														{$$ = $1;}
-			;
+str			:	IDENTIFIER												{$$ = checkThisCharVar($1);}
+				|	CHARACTER													{$$ = $1;}
+				| STRING														{$$ = $1;}
+				; 
+
 
 %%                    
 
@@ -91,7 +118,7 @@ int main (void) {
 	return yyparse();
 }
 
-void yyerror (const char *s) {
+void yyerror (const char *errorSTR) {
 	fflush(stdout);
-	fprintf(stderr, "\nLINE %d Error: %s\n", yylineno, s);
+	fprintf(stderr, "\nLINE %d Error: %s\n", yylineno, errorSTR);
 }

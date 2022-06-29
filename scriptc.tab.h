@@ -39,6 +39,20 @@
 #if YYDEBUG
 extern int yydebug;
 #endif
+/* "%code requires" blocks.  */
+/* Line 2058 of yacc.c  */
+#line 15 "scriptc.y"
+
+	struct nodeVals{
+			float numbers[100];
+			int numbersLen;
+			char *strings[100];
+			int stringsLen;
+	};
+
+
+/* Line 2058 of yacc.c  */
+#line 56 "scriptc.tab.h"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -48,15 +62,14 @@ extern int yydebug;
    enum yytokentype {
      display = 258,
      IDENTIFIER = 259,
-     NUM_SPECIFIER = 260,
+     STRING = 260,
      NEWLINE = 261,
      INT = 262,
      CHAR = 263,
      FLOAT = 264,
      INTEGERS = 265,
      DECIMALS = 266,
-     CHARACTER = 267,
-     LET_SPECIFIER = 268
+     CHARACTER = 267
    };
 #endif
 
@@ -65,11 +78,14 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 14 "scriptc.y"
-int i; float f; char* s; char* c;
+#line 24 "scriptc.y"
+
+	int i; float f; char* s; char* c;
+	struct nodeVals p;
+
 
 /* Line 2058 of yacc.c  */
-#line 73 "scriptc.tab.h"
+#line 89 "scriptc.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

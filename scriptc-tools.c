@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <math.h>
 
 int line = 1;		// for getting incremented line number indexes
 int indexVar = 0;		// for incrementing variable indexes
@@ -18,6 +19,16 @@ float symbols[1000];		// symbols store values to the identifier
 char* char_symbols[1000];		// symbols store chartype values to the identifier
 identifier id[1000];		// id will be the struct variable name and has 1000 indexes to store data
 
+// struct nodeVals{
+// 			float numbers[100];
+// 			int numbersLen;
+// 			char *strings[100];
+// };
+int count(const char *str, const char *sub);
+void printValues(char* string);
+void substringInsert(int position, char* str1, char* str2);
+void replaceNumbers(char* string, float value);
+void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLen, int stringsLen);
 
 
 /* compIdxVar will compute the given variable index and return it*/    
@@ -172,14 +183,16 @@ void checkVarDup(char* variable, char* type){
 void checkNumVarExist(char* variable, float value){
 	int i;
 	int flag = 0;
+
+
 	
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
 			if(strcmp(id[i].typ,"int")==0 || strcmp(id[i].typ,"float")==0){
 				flag = 1;
 				break;			
-			}
-		}
+			} 
+		} 
 	}
 	if(flag==1){
 		saveThisNumVal(variable,value);		// if exists, it will invoke the saveThisVar function to save the variable's value
@@ -221,10 +234,10 @@ float checkThisNumVar(char* variable){
 	int i;
 	int flag = 0;
 	
+
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
 			if(strcmp(id[i].typ,"int")==0){
-				
 				flag = 1;
 				break;			
 			}
@@ -372,3 +385,110 @@ void CharNumValPrint(char* specifier, char* specifier2, char* value, float value
 			printf("\nLINE %d Output: %s%f",line,value,value2);	// prints strings, then float
 	}
 }
+
+
+
+
+
+
+// new 
+
+int count(const char *str, const char *sub) {
+    int sublen = strlen(sub);
+    if (sublen == 0) return 0;
+    int res = 0;
+    for (str = strstr(str, sub); str; str = strstr(str + sublen, sub))
+        ++res;
+    return res;
+}
+
+void printValues(char* string){
+	printf("%s", string);
+}
+
+void substringInsert(int pos, char* str1, char* str2){
+	int counter;
+	int position = pos-1;
+	int strLength = strlen(str1);
+	char *mainStr, finalStr[200];
+	int leftChars = position;
+	int rightChars = strLength - position - 2;
+
+	char left[100] = "";
+
+	for (counter = 0; counter < leftChars; counter++){
+		char currentChar = str1[counter];
+		strncat(left, &currentChar, 1);
+	}
+
+	char right[100] = "";
+
+	for (counter = 0; counter < rightChars; counter++){
+		char currentChar = str1[position + 2 + counter];
+		strncat(right, &currentChar, 1);
+	}
+
+	strcpy(str1, left);
+	strcat(str1, str2);
+	strcat(str1, right);
+}
+
+int getPosition(char *str, char *subStr){
+	char *dest = strstr(str, subStr);
+	int pos;
+	pos = dest - str + 1;
+	return pos;
+}
+
+void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLen, int stringsLen) {
+	int numSpecifiers, strSpecifiers, floatSpecifiers, integerSpecifiers, charSpecifiers, stringSpecifiers, counter, counter2, counter3;
+	int posfloat, posint;
+	char strFinal[200], strInitial[200], strValue[100];
+
+	floatSpecifiers = count(inputStr, "%f");
+	integerSpecifiers = count(inputStr, "%d");
+	charSpecifiers = count(inputStr, "%c");
+	stringSpecifiers = count(inputStr, "%s");
+
+	// final string
+	strcpy(strFinal, inputStr);
+	strcpy(strInitial, inputStr);
+	
+	numSpecifiers = floatSpecifiers + integerSpecifiers;
+	strSpecifiers = charSpecifiers + stringSpecifiers;
+
+	int position;
+
+	if(numSpecifiers > 0){
+		// print float
+		for (counter = 0; counter <= numSpecifiers; counter++)
+		{
+			floatSpecifiers = count(strFinal, "%f");
+			integerSpecifiers = count(strFinal, "%d");
+	
+			if(floatSpecifiers) posfloat = getPosition(strFinal, "%f"); 
+			if(integerSpecifiers) posint = getPosition(strFinal, "%d"); 
+
+			if(posfloat && posint && (posfloat < posint)){
+				sprintf(strValue, "%f", numbers[counter]);
+				substringInsert(posfloat, strFinal, strValue);
+			} else if (posfloat && posint && (posfloat > posint)) {
+				sprintf(strValue, "%d", (int)numbers[counter]);
+				substringInsert(posint, strFinal, strValue);
+			} else if (!posint && posfloat){
+				sprintf(strValue, "%f", numbers[counter]);
+				substringInsert(posfloat, strFinal, strValue);
+			} else if(!posfloat && posint){
+				sprintf(strValue, "%d", (int)numbers[counter]);
+				substringInsert(posint, strFinal, strValue);
+			}
+
+			posfloat = posint = 0;
+		}
+	
+	}
+	printf("%s", strFinal);
+}
+
+
+
