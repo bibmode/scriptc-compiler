@@ -12,6 +12,7 @@ extern yylineno;
 
 %}
 
+/* THIS IS FOR THE p DATA TYPE */
 %code requires {
 	struct nodeVals{
 			float numbers[100];
@@ -62,11 +63,13 @@ type		:	INT																{$$ = $1;}
 			|	FLOAT															{$$ = $1;}
 			;
 
+/* EDITED BY ME */
 /* expected inputs for the print statement */
 print :	display ':' STRING         						{printValues($3);}
 			| display ':' STRING printVals 					{printStruct($3, $4.numbers, $4.strings, $4.numbersLen, $4.stringsLen);}
 			;
 
+/* ADDED BY ME */
 printVals : ',' expr							{
 																		$$.numbers[$$.numbersLen] = $2;
 																		$$.numbersLen++;

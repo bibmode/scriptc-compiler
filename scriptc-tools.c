@@ -389,10 +389,15 @@ void CharNumValPrint(char* specifier, char* specifier2, char* value, float value
 
 
 
+// START OF MY CODES
+// ALL OF THE FUNCTIONS HERE ARE INITIALIZED ABOVE AT LINE 27 - 31
 
+// DISPLAYS NORMAL STRING FOR YACC LINE 68
+void printValues(char* string){
+	printf("%s", string);
+}
 
-// new 
-
+// USED FOR COUNTING THE SPECIFIERS FOUND IN THE DISPLAY STRING
 int count(const char *str, const char *sub) {
     int sublen = strlen(sub);
     if (sublen == 0) return 0;
@@ -402,10 +407,7 @@ int count(const char *str, const char *sub) {
     return res;
 }
 
-void printValues(char* string){
-	printf("%s", string);
-}
-
+// REPLACES THE IDENTIFIER WITH THEIR VALUES
 void substringInsert(int pos, char* str1, char* str2){
 	int counter;
 	int position = pos-1;
@@ -433,6 +435,7 @@ void substringInsert(int pos, char* str1, char* str2){
 	strcat(str1, right);
 }
 
+// GETS THE POSITION OF IDENTIFIER ON STRING
 int getPosition(char *str, char *subStr){
 	char *dest = strstr(str, subStr);
 	int pos;
@@ -440,6 +443,7 @@ int getPosition(char *str, char *subStr){
 	return pos;
 }
 
+// PRINTS THE STRING FOR THE FINAL PRODUCT IN YACC LINE 69
 void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLen, int stringsLen) {
 	int numSpecifiers, strSpecifiers, floatSpecifiers, integerSpecifiers, charSpecifiers, stringSpecifiers, counter, counter2, counter3;
 	int posfloat, posint;
