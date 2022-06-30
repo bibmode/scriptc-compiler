@@ -1709,11 +1709,11 @@ yyreduce:
 /* Line 1792 of yacc.c  */
 #line 163 "scriptc.y"
     {
-																								int type = checkReturnType((yyvsp[(1) - (1)].s));
-																								if(type == 1){
+																								int typeId = checkReturnType((yyvsp[(1) - (1)].s));
+																								if(typeId == 1){
 																									(yyval.id).strVal = checkThisCharVar((yyvsp[(1) - (1)].s));
 																									(yyval.id).type = 0;
-																								} else if(type == 2){
+																								} else if(typeId == 2){
 																									(yyval.id).numVal = checkThisNumVar((yyvsp[(1) - (1)].s));
 																									(yyval.id).type = 1;
 																								}
@@ -1965,4 +1965,5 @@ int main (void) {
 void yyerror (const char *errorSTR) {
 	fflush(stdout);
 	fprintf(stderr, "\nLINE %d Error: %s\n", yylineno, errorSTR);
+	exit(0);
 }

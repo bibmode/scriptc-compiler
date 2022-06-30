@@ -130,24 +130,24 @@ printVals : ',' expr							{
 
 /* expected inputs for the arithmetic statement */
 expr    	:	term															{$$ = $1;}
-       	    |	expr '+' term													{$$ = $1 + $3;}
-						|	id '+' factor													{$$ = checkThisNumVar($1.varName) + $3;}
-        		|	factor '+' id													{$$ = $1 + checkThisNumVar($3.varName);}
-       	    |	expr '-' term													{$$ = $1 - $3;}
-						|	id '-' factor													{$$ = checkThisNumVar($1.varName) - $3;}
-        		|	factor '-' id													{$$ = $1 - checkThisNumVar($3.varName);}
+       	    |	expr '+' term										{$$ = $1 + $3;}
+						|	id '+' factor										{$$ = checkThisNumVar($1.varName) + $3;}
+        		|	factor '+' id										{$$ = $1 + checkThisNumVar($3.varName);}
+       	    |	expr '-' term										{$$ = $1 - $3;}
+						|	id '-' factor										{$$ = checkThisNumVar($1.varName) - $3;}
+        		|	factor '-' id										{$$ = $1 - checkThisNumVar($3.varName);}
        	    ;
 
 term		:	factor															{$$ = $1;}
-        	|	term '*' factor													{$$ = $1 * $3;}		
-        	|	term '/' factor													{$$ = $1 / $3;}
-					|	id '*' factor													{$$ = checkThisNumVar($1.varName) * $3;}
-        	|	factor '*' id													{$$ = $1 * checkThisNumVar($3.varName);}
-        	|	id '/' factor													{$$ = checkThisNumVar($1.varName) / $3;}
-        	|	factor '/' id													{$$ = $1 / checkThisNumVar($3.varName);}
+        	|	term '*' factor										{$$ = $1 * $3;}		
+        	|	term '/' factor										{$$ = $1 / $3;}
+					|	id '*' factor											{$$ = checkThisNumVar($1.varName) * $3;}
+        	|	factor '*' id											{$$ = $1 * checkThisNumVar($3.varName);}
+        	|	id '/' factor											{$$ = checkThisNumVar($1.varName) / $3;}
+        	|	factor '/' id											{$$ = $1 / checkThisNumVar($3.varName);}
         	;
 
-factor		:	values															{$$ = $1;}
+factor		:	values														{$$ = $1;}
 			|	'(' expr ')'													{$$ = $2;}	
 			;
 
@@ -161,11 +161,11 @@ str			:	CHARACTER													{$$ = $1;}
 				;
 
 id			:	IDENTIFIER												{
-																								int type = checkReturnType($1);
-																								if(type == 1){
+																								int typeId = checkReturnType($1);
+																								if(typeId == 1){
 																									$$.strVal = checkThisCharVar($1);
 																									$$.type = 0;
-																								} else if(type == 2){
+																								} else if(typeId == 2){
 																									$$.numVal = checkThisNumVar($1);
 																									$$.type = 1;
 																								}
@@ -183,4 +183,5 @@ int main (void) {
 void yyerror (const char *errorSTR) {
 	fflush(stdout);
 	fprintf(stderr, "\nLINE %d Error: %s\n", yylineno, errorSTR);
+	exit(0);
 }
