@@ -53,7 +53,7 @@ numVar_statements	:	NIDENTIFIER ':' type										{checkVarDup($1,$3);}
 					|	NIDENTIFIER '=' expr										{checkNumVarExist($1,$3);}
 					|	NIDENTIFIER ':' type '=' expr							{checkVarDup($1,$3); saveThisNumVal($1,$5); updateNumVal($1,$5);}
 					;
-					
+
 letVar_statements	:	SIDENTIFIER ':' CHAR										{checkVarDup($1,$3);}
 					|	SIDENTIFIER '=' str										{checkCharVarExist($1,$3);}
 					|	SIDENTIFIER ':' CHAR '=' str								{checkVarDup($1,$3); saveThisCharVal($1,$5); updateCharVal($1,$5);}
@@ -67,7 +67,7 @@ type		:	INT																{$$ = $1;}
 /* EDITED BY ME */
 /* expected inputs for the print statement */
 print :	display ':' STRING         						{printValues($3);}
-			| display ':' STRING printVals 					{printStruct($3, $4.numbers, $4.strings, $4.numbersLen, $4.stringsLen);}
+			| display ':' STRING printVals 					{printStruct($3, $4.numbers, $4.numbersLen, $4.stringsLen);}
 			;
 
 /* ADDED BY ME */
@@ -76,16 +76,15 @@ printVals : ',' expr							{
 																		$$.numbersLen++;
 																	}
 				  | ',' str   						{
-																		$$.strings[$$.stringsLen] = $2;
+																		addStr($2, $$.stringsLen);
 																		$$.stringsLen++;
-																		
 																	}
 				  | printVals ',' expr    {
 																		$$.numbers[$$.numbersLen] = $3;
 																		$$.numbersLen++;
 																	}
 					| printVals ',' str			{
-																		$$.strings[$$.stringsLen] = $3;
+																		addStr($3, $$.stringsLen);
 																		$$.stringsLen++;
 																	}
 					;

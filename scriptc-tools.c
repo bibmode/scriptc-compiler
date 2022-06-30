@@ -19,18 +19,19 @@ float symbols[1000];		// symbols store values to the identifier
 char* char_symbols[1000];		// symbols store chartype values to the identifier
 identifier id[1000];		// id will be the struct variable name and has 1000 indexes to store data
 
-// struct nodeVals{
-// 			float numbers[100];
-// 			int numbersLen;
-// 			char *strings[100];
-// };
+char stringsDisplay[100][100];
+
+void addStr(char *str, int length){
+	strcpy(stringsDisplay[length], str);
+}
+
 char* checkThisCharVar(char* variable);
 int count(const char *str, const char *sub);
 void printValues(char* string);
 void substringInsert(int position, char* str1, char* str2);
 void replaceNumbers(char* string, float value);
 void printFinalString(char *strFinal);
-void printStruct(char* inputStr, float numbers[], char **strings, int numbersLen, int stringsLen);
+void printStruct(char *inputStr, float numbers[], int numbersLen, int stringsLen);
 
 
 /* compIdxVar will compute the given variable index and return it*/    
@@ -271,7 +272,6 @@ char* checkThisCharVar(char* variable){
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
 			if (strcmp(id[i].typ,"char")==0){
-				printf("char var working\n");
 				flag = 1;
 				break;
 			}
@@ -466,7 +466,7 @@ void printFinalString(char *strFinal){
 
 
 // PRINTS THE STRING FOR THE FINAL PRODUCT IN YACC LINE 69
-void printStruct(char* inputStr, float numbers[], char **strings, int numbersLen, int stringsLen) {
+void printStruct(char* inputStr, float numbers[], int numbersLen, int stringsLen) {
 	int numSpecifiers=0, strSpecifiers=0, floatSpecifiers=0, integerSpecifiers=0, charSpecifiers=0, stringSpecifiers=0;
 	
 	int posfloat, posint, poschar, posstr, counter;
@@ -515,11 +515,8 @@ void printStruct(char* inputStr, float numbers[], char **strings, int numbersLen
 	}
 
 	// prints the string specifiers
-	printf("%d\n", strSpecifiers);
-	printf("%d\n", stringsLen);
-
-	// prints the string specifiers
 	if(strSpecifiers > 0){
+
 		for (counter = 0; counter <= strSpecifiers && counter <= stringsLen; counter++)
 		{
 			charSpecifiers = count(strFinal, "%c");
@@ -528,15 +525,29 @@ void printStruct(char* inputStr, float numbers[], char **strings, int numbersLen
 			if(charSpecifiers) poschar = getPosition(strFinal, "%c"); 
 			if(stringSpecifiers) posstr = getPosition(strFinal, "%s"); 
 
-			printf("%d\n", posstr);
+			if(posstr && poschar && (posstr < poschar)){
+				// printf("if 1 -> %s\n", stringsDisplay[counter]);
+				sprintf(strValue, "%s", stringsDisplay[counter]);
+				substringInsert(posstr, strFinal, strValue);
 
-			if(posstr){
-				printf("this is working\n");
-				printf("%s", strings[counter]);
-				sprintf(strValue, "%s", strings[counter]);
+			} else if (poschar && posstr && (posstr > poschar)) {
+				// printf("if 2 -> %s\n", stringsDisplay[counter]);
+				sprintf(strValue, "%c", stringsDisplay[counter][0]);
+				substringInsert(poschar, strFinal, strValue);
+
+			} else if (!posstr && poschar){
+				// printf("if 3 -> %s\n", stringsDisplay[counter]);
+				sprintf(strValue, "%c", stringsDisplay[counter][0]);
+				substringInsert(poschar, strFinal, strValue);
+
+			} else if(!poschar && posstr){
+				// printf("if 4 -> %s\n", stringsDisplay[counter]);
+				sprintf(strValue, "%s", stringsDisplay[counter]);
 				substringInsert(posstr, strFinal, strValue);
 			}
+
 			poschar = posstr = 0;
+
 		} 
 	}
 

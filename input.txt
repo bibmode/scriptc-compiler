@@ -1,4 +1,8 @@
 
 svar:char="hello"
+svarr:char="nice"
+svarGen:char="yooo"
+nvar:int=21
 
-display:"genevieve %s\n",svar
+display:"genevieve %s %d %s\n",svar,nvar,svarGen
+display:"hello"
