@@ -24,12 +24,13 @@ identifier id[1000];		// id will be the struct variable name and has 1000 indexe
 // 			int numbersLen;
 // 			char *strings[100];
 // };
+char* checkThisCharVar(char* variable);
 int count(const char *str, const char *sub);
 void printValues(char* string);
 void substringInsert(int position, char* str1, char* str2);
 void replaceNumbers(char* string, float value);
 void printFinalString(char *strFinal);
-void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLen, int stringsLen);
+void printStruct(char* inputStr, float numbers[], char **strings, int numbersLen, int stringsLen);
 
 
 /* compIdxVar will compute the given variable index and return it*/    
@@ -198,7 +199,7 @@ void checkNumVarExist(char* variable, float value){
 		updateNumVal(variable,value);		// then, it will invoke the updateNumVal function to update the variable's value
 		// printf("\nLINE %d: Correct Variable '%s' Initialization!",line,variable);
 	} else {
-		printf("\nLINE %d Error: undeclared variable, checkNumVarExist '%s'",line,variable);
+		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
 		exit(0);
 	}
 }
@@ -221,7 +222,7 @@ void checkCharVarExist(char* variable, char* value){
 		updateCharVal(variable,value);		// then, it will invoke the updateCharVal function to update the variable's value
 		// printf("\nLINE %d: Correct Variable '%s' Initialization!",line,variable);
 	} else {
-		printf("\nLINE %d Error: undeclared variable, checkCharVarExist '%s'",line,variable);
+		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
 		exit(0);
 	}
 }
@@ -243,12 +244,19 @@ float checkThisNumVar(char* variable){
 				flag = 1;
 				break;
 			}
+			else if (strcmp(id[i].typ,"char")==0) {
+				printf("num var running\n");
+				flag = 2;
+				break;
+			}
 		}
 	}
 	if(flag==1){
 		return getNumValue(variable); // if exists, then it will invoke the getNumValue function
+	} else if(flag==2) {
+		checkThisCharVar(variable);
 	} else {
-			printf("\nLINE %d Error: undeclared variable, checkThisNumVar '%s'",line,variable);
+		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
 		exit(0);
 	}
 }
@@ -263,6 +271,7 @@ char* checkThisCharVar(char* variable){
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
 			if (strcmp(id[i].typ,"char")==0){
+				printf("char var working\n");
 				flag = 1;
 				break;
 			}
@@ -271,7 +280,7 @@ char* checkThisCharVar(char* variable){
 	if(flag==1){
 		return getCharValue(variable); // if exists, then it will invoke the getCharValue function
 	} else {
-		printf("\nLINE %d Error: undeclared variable, checkThisCharVar '%s'",line,variable);
+		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
 		exit(0);
 	}
 }
@@ -457,9 +466,10 @@ void printFinalString(char *strFinal){
 
 
 // PRINTS THE STRING FOR THE FINAL PRODUCT IN YACC LINE 69
-void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLen, int stringsLen) {
-	int numSpecifiers, strSpecifiers, floatSpecifiers, integerSpecifiers, charSpecifiers, stringSpecifiers, counter;
-	int posfloat, posint;
+void printStruct(char* inputStr, float numbers[], char **strings, int numbersLen, int stringsLen) {
+	int numSpecifiers=0, strSpecifiers=0, floatSpecifiers=0, integerSpecifiers=0, charSpecifiers=0, stringSpecifiers=0;
+	
+	int posfloat, posint, poschar, posstr, counter;
 	char strFinal[200], strInitial[200], strValue[100];
 
 	floatSpecifiers = count(inputStr, "%f");
@@ -505,7 +515,30 @@ void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLe
 	}
 
 	// prints the string specifiers
-	// printf("%d %d\n", stringSpecifiers, charSpecifiers);
+	printf("%d\n", strSpecifiers);
+	printf("%d\n", stringsLen);
+
+	// prints the string specifiers
+	if(strSpecifiers > 0){
+		for (counter = 0; counter <= strSpecifiers && counter <= stringsLen; counter++)
+		{
+			charSpecifiers = count(strFinal, "%c");
+			stringSpecifiers = count(strFinal, "%s");
+	
+			if(charSpecifiers) poschar = getPosition(strFinal, "%c"); 
+			if(stringSpecifiers) posstr = getPosition(strFinal, "%s"); 
+
+			printf("%d\n", posstr);
+
+			if(posstr){
+				printf("this is working\n");
+				printf("%s", strings[counter]);
+				sprintf(strValue, "%s", strings[counter]);
+				substringInsert(posstr, strFinal, strValue);
+			}
+			poschar = posstr = 0;
+		} 
+	}
 
 
 	printFinalString(strFinal);

@@ -1,4 +1,4 @@
 
-intVar:float=12
+svar:char="hello"
 
-display:"genevieve %f", intVar 
+display:"genevieve %s\n",svar

@@ -29,7 +29,7 @@ extern yylineno;
 
     /* Yacc definitions */
 
-%token <s> display IDENTIFIER STRING NEWLINE INT CHAR FLOAT <i> INTEGERS <f> DECIMALS <c> CHARACTER 
+%token <s> display NIDENTIFIER SIDENTIFIER STRING NEWLINE INT CHAR FLOAT <i> INTEGERS <f> DECIMALS <c> CHARACTER 
 %type <f> expr term factor values
 %type <s> type str print 
 %type <p> printVals 
@@ -49,13 +49,14 @@ commands	:	numVar_statements
 			;
 
 /* expected inputs for the variable declaration & initialization */
-numVar_statements	:	IDENTIFIER ':' type										{checkVarDup($1,$3);}
-					|	IDENTIFIER '=' expr										{checkNumVarExist($1,$3);}
-					|	IDENTIFIER ':' type '=' expr							{checkVarDup($1,$3); saveThisNumVal($1,$5); updateNumVal($1,$5);}
+numVar_statements	:	NIDENTIFIER ':' type										{checkVarDup($1,$3);}
+					|	NIDENTIFIER '=' expr										{checkNumVarExist($1,$3);}
+					|	NIDENTIFIER ':' type '=' expr							{checkVarDup($1,$3); saveThisNumVal($1,$5); updateNumVal($1,$5);}
 					;
-letVar_statements	:	IDENTIFIER ':' CHAR										{checkVarDup($1,$3);}
-					|	IDENTIFIER '=' str										{checkCharVarExist($1,$3);}
-					|	IDENTIFIER ':' CHAR '=' str								{checkVarDup($1,$3); saveThisCharVal($1,$5); updateCharVal($1,$5);}
+					
+letVar_statements	:	SIDENTIFIER ':' CHAR										{checkVarDup($1,$3);}
+					|	SIDENTIFIER '=' str										{checkCharVarExist($1,$3);}
+					|	SIDENTIFIER ':' CHAR '=' str								{checkVarDup($1,$3); saveThisCharVal($1,$5); updateCharVal($1,$5);}
 					;
 
 /* type can be either INT or FLOAT */
@@ -77,6 +78,7 @@ printVals : ',' expr							{
 				  | ',' str   						{
 																		$$.strings[$$.stringsLen] = $2;
 																		$$.stringsLen++;
+																		
 																	}
 				  | printVals ',' expr    {
 																		$$.numbers[$$.numbersLen] = $3;
@@ -104,15 +106,17 @@ factor		:	values															{$$ = $1;}
 			;
 
 /* term can be either int or float or variable holding the value */
-values	:	IDENTIFIER												{$$ = checkThisNumVar($1);}
+values	:	NIDENTIFIER												{$$ = checkThisNumVar($1);}
 			  |	INTEGERS													{$$ = $1;}
 		  	|	DECIMALS													{$$ = $1;}
 		    ;
 
-str			:	IDENTIFIER												{$$ = checkThisCharVar($1);}
+str			:	SIDENTIFIER												{$$ = checkThisCharVar($1);}
 				|	CHARACTER													{$$ = $1;}
 				| STRING														{$$ = $1;}
-				; 
+				;
+
+
 
 
 %%                    

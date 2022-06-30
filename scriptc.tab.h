@@ -61,15 +61,16 @@ extern int yydebug;
       know about them.  */
    enum yytokentype {
      display = 258,
-     IDENTIFIER = 259,
-     STRING = 260,
-     NEWLINE = 261,
-     INT = 262,
-     CHAR = 263,
-     FLOAT = 264,
-     INTEGERS = 265,
-     DECIMALS = 266,
-     CHARACTER = 267
+     NIDENTIFIER = 259,
+     SIDENTIFIER = 260,
+     STRING = 261,
+     NEWLINE = 262,
+     INT = 263,
+     CHAR = 264,
+     FLOAT = 265,
+     INTEGERS = 266,
+     DECIMALS = 267,
+     CHARACTER = 268
    };
 #endif
 
@@ -85,7 +86,7 @@ typedef union YYSTYPE
 
 
 /* Line 2058 of yacc.c  */
-#line 89 "scriptc.tab.h"
+#line 90 "scriptc.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
