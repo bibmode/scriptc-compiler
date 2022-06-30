@@ -28,6 +28,7 @@ int count(const char *str, const char *sub);
 void printValues(char* string);
 void substringInsert(int position, char* str1, char* str2);
 void replaceNumbers(char* string, float value);
+void printFinalString(char *strFinal);
 void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLen, int stringsLen);
 
 
@@ -183,8 +184,6 @@ void checkVarDup(char* variable, char* type){
 void checkNumVarExist(char* variable, float value){
 	int i;
 	int flag = 0;
-
-
 	
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
@@ -199,7 +198,7 @@ void checkNumVarExist(char* variable, float value){
 		updateNumVal(variable,value);		// then, it will invoke the updateNumVal function to update the variable's value
 		// printf("\nLINE %d: Correct Variable '%s' Initialization!",line,variable);
 	} else {
-		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
+		printf("\nLINE %d Error: undeclared variable, checkNumVarExist '%s'",line,variable);
 		exit(0);
 	}
 }
@@ -222,7 +221,7 @@ void checkCharVarExist(char* variable, char* value){
 		updateCharVal(variable,value);		// then, it will invoke the updateCharVal function to update the variable's value
 		// printf("\nLINE %d: Correct Variable '%s' Initialization!",line,variable);
 	} else {
-		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
+		printf("\nLINE %d Error: undeclared variable, checkCharVarExist '%s'",line,variable);
 		exit(0);
 	}
 }
@@ -233,7 +232,6 @@ void checkCharVarExist(char* variable, char* value){
 float checkThisNumVar(char* variable){
 	int i;
 	int flag = 0;
-	
 
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
@@ -250,7 +248,7 @@ float checkThisNumVar(char* variable){
 	if(flag==1){
 		return getNumValue(variable); // if exists, then it will invoke the getNumValue function
 	} else {
-			printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
+			printf("\nLINE %d Error: undeclared variable, checkThisNumVar '%s'",line,variable);
 		exit(0);
 	}
 }
@@ -273,7 +271,7 @@ char* checkThisCharVar(char* variable){
 	if(flag==1){
 		return getCharValue(variable); // if exists, then it will invoke the getCharValue function
 	} else {
-		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
+		printf("\nLINE %d Error: undeclared variable, checkThisCharVar '%s'",line,variable);
 		exit(0);
 	}
 }
@@ -443,6 +441,19 @@ int getPosition(char *str, char *subStr){
 	return pos;
 }
 
+// PRINTS THE FINAL STRING OUTPUT WITH NEW LINES
+void printFinalString(char *strFinal){
+	int counter2=0;
+
+	while(strFinal[counter2] != '\0')
+		{
+		 if(strFinal[counter2] == '\\' && strFinal[counter2+1] == 'n'){	
+			printf("\n");
+			counter2++;
+		} else printf("%c", strFinal[counter2]);
+			counter2++;
+	}
+}
 
 
 // PRINTS THE STRING FOR THE FINAL PRODUCT IN YACC LINE 69
@@ -467,7 +478,6 @@ void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLe
 
 	// prints the number specifiers
 	if(numSpecifiers > 0){
-		// print float
 		for (counter = 0; counter <= numSpecifiers && counter <= numbersLen; counter++)
 		{
 			floatSpecifiers = count(strFinal, "%f");
@@ -492,23 +502,13 @@ void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLe
 
 			posfloat = posint = 0;
 		}
-	
 	}
 
-	// prints new lines
-	int counter2=0;
-
-	while(strFinal[counter2] != '\0')
-		{
-		 if(strFinal[counter2] == '\\' && strFinal[counter2+1] == 'n'){	
-			printf("\n");
-			counter2++;
-		} else printf("%c", strFinal[counter2]);
-			counter2++;
-		}
+	// prints the string specifiers
+	// printf("%d %d\n", stringSpecifiers, charSpecifiers);
 
 
-	// printf("%s", strFinal);
+	printFinalString(strFinal);
 }
 
 

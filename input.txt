@@ -1,4 +1,4 @@
-newVar:char="gen"
-newVar="ranz and floc"
 
-display:"genevieve %d %f \n hello", 12, 34, 5
+intVar:float=12
+
+display:"genevieve %f", intVar 
