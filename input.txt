@@ -1,4 +1,4 @@
 newVar:char="gen"
 newVar="ranz and floc"
 
-display:"genevieve is sleepy"
+display:"genevieve %d %f \n hello", 12, 34, 5

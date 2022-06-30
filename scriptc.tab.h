@@ -41,7 +41,7 @@ extern int yydebug;
 #endif
 /* "%code requires" blocks.  */
 /* Line 2058 of yacc.c  */
-#line 15 "scriptc.y"
+#line 16 "scriptc.y"
 
 	struct nodeVals{
 			float numbers[100];
@@ -78,7 +78,7 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 24 "scriptc.y"
+#line 25 "scriptc.y"
 
 	int i; float f; char* s; char* c;
 	struct nodeVals p;

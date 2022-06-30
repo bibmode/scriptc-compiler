@@ -443,9 +443,11 @@ int getPosition(char *str, char *subStr){
 	return pos;
 }
 
+
+
 // PRINTS THE STRING FOR THE FINAL PRODUCT IN YACC LINE 69
 void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLen, int stringsLen) {
-	int numSpecifiers, strSpecifiers, floatSpecifiers, integerSpecifiers, charSpecifiers, stringSpecifiers, counter, counter2, counter3;
+	int numSpecifiers, strSpecifiers, floatSpecifiers, integerSpecifiers, charSpecifiers, stringSpecifiers, counter;
 	int posfloat, posint;
 	char strFinal[200], strInitial[200], strValue[100];
 
@@ -463,9 +465,10 @@ void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLe
 
 	int position;
 
+	// prints the number specifiers
 	if(numSpecifiers > 0){
 		// print float
-		for (counter = 0; counter <= numSpecifiers; counter++)
+		for (counter = 0; counter <= numSpecifiers && counter <= numbersLen; counter++)
 		{
 			floatSpecifiers = count(strFinal, "%f");
 			integerSpecifiers = count(strFinal, "%d");
@@ -491,7 +494,21 @@ void printStruct(char* inputStr, float numbers[], char *strings[], int numbersLe
 		}
 	
 	}
-	printf("%s", strFinal);
+
+	// prints new lines
+	int counter2=0;
+
+	while(strFinal[counter2] != '\0')
+		{
+		 if(strFinal[counter2] == '\\' && strFinal[counter2+1] == 'n'){	
+			printf("\n");
+			counter2++;
+		} else printf("%c", strFinal[counter2]);
+			counter2++;
+		}
+
+
+	// printf("%s", strFinal);
 }
 
 
