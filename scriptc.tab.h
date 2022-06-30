@@ -50,9 +50,16 @@ extern int yydebug;
 			int stringsLen;
 	};
 
+	struct idVals{
+		char *varName;
+		int numVal;
+		char *strVal;
+		int type;
+	};
+
 
 /* Line 2058 of yacc.c  */
-#line 56 "scriptc.tab.h"
+#line 63 "scriptc.tab.h"
 
 /* Tokens.  */
 #ifndef YYTOKENTYPE
@@ -61,16 +68,15 @@ extern int yydebug;
       know about them.  */
    enum yytokentype {
      display = 258,
-     NIDENTIFIER = 259,
-     SIDENTIFIER = 260,
-     STRING = 261,
-     NEWLINE = 262,
-     INT = 263,
-     CHAR = 264,
-     FLOAT = 265,
-     INTEGERS = 266,
-     DECIMALS = 267,
-     CHARACTER = 268
+     IDENTIFIER = 259,
+     STRING = 260,
+     NEWLINE = 261,
+     INT = 262,
+     CHAR = 263,
+     FLOAT = 264,
+     INTEGERS = 265,
+     DECIMALS = 266,
+     CHARACTER = 267
    };
 #endif
 
@@ -79,14 +85,15 @@ extern int yydebug;
 typedef union YYSTYPE
 {
 /* Line 2058 of yacc.c  */
-#line 25 "scriptc.y"
+#line 32 "scriptc.y"
 
 	int i; float f; char* s; char* c;
 	struct nodeVals p;
+	struct idVals id;
 
 
 /* Line 2058 of yacc.c  */
-#line 90 "scriptc.tab.h"
+#line 97 "scriptc.tab.h"
 } YYSTYPE;
 # define YYSTYPE_IS_TRIVIAL 1
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */

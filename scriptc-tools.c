@@ -33,6 +33,58 @@ void replaceNumbers(char* string, float value);
 void printFinalString(char *strFinal);
 void printStruct(char *inputStr, float numbers[], int numbersLen, int stringsLen);
 
+void test(char *str){
+	printf("%s", str);
+}
+
+char *getStringFromId(char *str){
+	char *val = checkThisCharVar(str);
+}
+
+void checkIfVarExist(char *variable){
+	int i;
+	int flag = 0;
+	
+	for(i=0;i<indexVar;i++){
+		if(strcmp(id[i].var,variable)==0){
+			flag=1;
+			break;
+		}
+	}
+
+	if(flag==0) {
+		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
+		exit(0);
+	}
+
+}
+
+
+
+int checkReturnType(char *variable){
+	int i;
+	int flag = 0;
+	
+	for(i=0;i<indexVar;i++){
+		if(strcmp(id[i].var,variable)==0){
+			if (strcmp(id[i].typ,"char")==0){
+				flag = 1;
+				break;
+			} else if (strcmp(id[i].typ,"int")==0 || strcmp(id[i].typ,"float")==0){
+				flag = 2;
+				break;
+			} 
+		}
+	}
+
+	return flag;
+
+	// char *val = checkThisVar(str);
+
+	// printf("%s", val);
+}
+
+///////////////////////
 
 /* compIdxVar will compute the given variable index and return it*/    
 int compIdxVar(char* variable){
@@ -222,8 +274,10 @@ void checkCharVarExist(char* variable, char* value){
 		saveThisCharVal(variable,value);		// if exists, it will invoke the saveThisVar function to save the variable's value
 		updateCharVal(variable,value);		// then, it will invoke the updateCharVal function to update the variable's value
 		// printf("\nLINE %d: Correct Variable '%s' Initialization!",line,variable);
+		
 	} else {
 		printf("\nLINE %d Error: undeclared variable, '%s'",line,variable);
+		
 		exit(0);
 	}
 }
@@ -284,116 +338,6 @@ char* checkThisCharVar(char* variable){
 		exit(0);
 	}
 }
-
-
-/* oneNumValPrint prints one given variable's number value*/
-void oneNumValPrint(char* specifier, float value){
-	int toIntValue = (int)value;
-
-	if(strcmp(specifier,"%d")==0){
-		printf("\nLINE %d Output: %d",line,toIntValue);		// prints integer
-	}
-	else if(strcmp(specifier,"%f")==0){
-		printf("\nLINE %d Output: %f",line,value);		// prints float
-	}
-}
-
-
-/* tw0NumValPrint prints two given variable's number values*/
-void twoNumValPrint(char* specifier, char* specifier2, float value, float value2){
-	int toIntValue = (int)value;
-	int toIntValue2 = (int)value2;
-
-	if(strcmp(specifier,"%d")==0){
-		if(strcmp(specifier2,"%d")==0){
-			printf("\nLINE %d Output: %d%d",line,toIntValue,toIntValue2);		// prints two integers
-		}
-		else{
-			printf("\nLINE %d Output: %d%f",line,toIntValue,value2);		// prints integer then float
-		}
-	}
-	else if(strcmp(specifier,"%f")==0){
-		if(strcmp(specifier2,"%f")==0){
-			printf("\nLINE %d Output: %f%f",line,value,value2);		// prints two floats
-		}
-		else{
-			printf("\nLINE %d Output: %f%d",line,value,toIntValue2);		// prints float, then integer
-		}
-	}
-}
-
-
-/* oneCharValPrint prints one given variable's character value*/
-void oneCharValPrint(char* specifier, char* value){
-	if(strcmp(specifier,"%c")==0){
-		printf("\nLINE %d Output: %c",line,value[0]);	// prints single character
-	}
-	else if(strcmp(specifier,"%s")==0){
-		printf("\nLINE %d Output: %s",line,value);	// prints strings
-	}
-}
-
-
-/* oneCharValPrint prints two given variable's character values*/
-void twoCharValPrint(char* specifier, char* specifier2, char* value, char* value2){
-
-	if(strcmp(specifier,"%c")==0){
-		if(strcmp(specifier2,"%c")==0){
-			printf("\nLINE %d Output: %c%c",line,value,value2);		// prints two single character
-		}
-		else if(strcmp(specifier2,"%s")==0){
-			printf("\nLINE %d Output: %c%s",line,value,value2);		// prints single character, then strings
-		}
-	}
-	else if(strcmp(specifier,"%s")==0){
-		if(strcmp(specifier2,"%c")==0){
-			printf("\nLINE %d Output: %s%c",line,value,value2);		// prints strings, then single character
-		}
-		else if(strcmp(specifier2,"%s")==0){
-			printf("\nLINE %d Output: %s%s",line,value,value2);		// prints two strings
-		}
-	}
-}
-
-
-/* NumCharValPrint prints the number values first, then the character values*/
-void NumCharValPrint(char* specifier, char* specifier2, float value, char* value2){
-	int toIntValue = (int)value;
-
-	if(strcmp(specifier,"%d")==0){
-		if(strcmp(specifier2,"%c")==0)
-			printf("\nLINE %d Output: %d%c",line,toIntValue,value2[0]);	// prints integer, then single character
-		else if(strcmp(specifier2,"%s")==0)
-			printf("\nLINE %d Output: %d%s",line,toIntValue,value2);	// prints integer, then strings
-	}
-	else if(strcmp(specifier,"%f")==0){
-		if(strcmp(specifier2,"%c")==0)
-			printf("\nLINE %d Output: %f%c",line,toIntValue,value2[0]);	// prints float, then single character
-		else if(strcmp(specifier2,"%s")==0)
-			printf("\nLINE %d Output: %f%s",line,toIntValue,value2);	// prints float, then strings
-	}
-}
-
-
-/* CharNumValPrint prints the character values first, then the number values*/
-void CharNumValPrint(char* specifier, char* specifier2, char* value, float value2){
-	int toIntValue2 = (int)value2;
-
-	if(strcmp(specifier,"%c")==0){
-		if(strcmp(specifier2,"%d")==0)
-			printf("\nLINE %d Output: %c%d",line,value[0],toIntValue2);	// prints single character, then integer
-		else if(strcmp(specifier2,"%f")==0)
-			printf("\nLINE %d Output: %s%f",line,value[0],value2);	// prints single character, then float
-	}
-	else if(strcmp(specifier,"%s")==0){
-		if(strcmp(specifier2,"%d")==0)
-			printf("\nLINE %d Output: %s%d",line,value,toIntValue2);	// prints strings, then integer
-		else if(strcmp(specifier2,"%f")==0)
-			printf("\nLINE %d Output: %s%f",line,value,value2);	// prints strings, then float
-	}
-}
-
-
 
 
 // START OF MY CODES

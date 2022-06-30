@@ -19,8 +19,7 @@ char strTemp[200];
                              
 [-]?[0-9]+                          {sscanf(yytext, "%d", &iTemp); yylval.i = iTemp; return INTEGERS;}
 [-]?[0-9]+\.[0-9]+                  {yylval.f = atof(yytext); return DECIMALS;}       
-[n][a-zA-Z_]+                       {yylval.s = strdup(yytext); return NIDENTIFIER;}
-[s][a-zA-Z_]+                       {yylval.s = strdup(yytext); return SIDENTIFIER;}
+[a-zA-Z_]+                       {yylval.s = strdup(yytext); return IDENTIFIER;}
 \"([^"]|\\\")*\"                    {
                                         yylval.s = strdup(yytext+1);
                                         if (yylval.s[yyleng-2] != '"')

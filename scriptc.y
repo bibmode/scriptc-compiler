@@ -20,19 +20,28 @@ extern yylineno;
 			char *strings[100];
 			int stringsLen;
 	};
+
+	struct idVals{
+		char *varName;
+		int numVal;
+		char *strVal;
+		int type;
+	};
 }
 
 %union {
 	int i; float f; char* s; char* c;
 	struct nodeVals p;
+	struct idVals id;
 }     
 
     /* Yacc definitions */
 
-%token <s> display NIDENTIFIER SIDENTIFIER STRING NEWLINE INT CHAR FLOAT <i> INTEGERS <f> DECIMALS <c> CHARACTER 
+%token <s> display IDENTIFIER STRING NEWLINE INT CHAR FLOAT <i> INTEGERS <f> DECIMALS <c> CHARACTER 
 %type <f> expr term factor values
 %type <s> type str print 
 %type <p> printVals 
+%type <id> id 
 %%
 
 /* descriptions of expected inputs corresponding actions (in C) */
@@ -49,14 +58,24 @@ commands	:	numVar_statements
 			;
 
 /* expected inputs for the variable declaration & initialization */
-numVar_statements	:	NIDENTIFIER ':' type										{checkVarDup($1,$3);}
-					|	NIDENTIFIER '=' expr										{checkNumVarExist($1,$3);}
-					|	NIDENTIFIER ':' type '=' expr							{checkVarDup($1,$3); saveThisNumVal($1,$5); updateNumVal($1,$5);}
+numVar_statements	:	id ':' type								{checkVarDup($1.varName,$3);}
+					|	id '=' expr												{checkNumVarExist($1.varName,$3);}
+					|	id ':' type '=' expr							{checkVarDup($1.varName,$3); saveThisNumVal($1.varName,$5); updateNumVal($1.varName,$5);}
 					;
 
-letVar_statements	:	SIDENTIFIER ':' CHAR										{checkVarDup($1,$3);}
-					|	SIDENTIFIER '=' str										{checkCharVarExist($1,$3);}
-					|	SIDENTIFIER ':' CHAR '=' str								{checkVarDup($1,$3); saveThisCharVal($1,$5); updateCharVal($1,$5);}
+letVar_statements	:	id ':' CHAR								{checkVarDup($1.varName,$3);}
+					|	id '=' str												{checkCharVarExist($1.varName,$3);}
+					|	id ':' CHAR '=' str								{
+																												checkVarDup($1.varName,$3); 
+																												saveThisCharVal($1.varName,$5); 
+																												updateCharVal($1.varName,$5);
+																											}
+					|	id ':' CHAR '=' id				{
+																												checkVarDup($1.varName,$3); 
+																												char *strVal = getStringFromId($5.varName);
+																												saveThisCharVal($1.varName,strVal); 
+																												updateCharVal($1.varName,strVal);
+																											}
 					;
 
 /* type can be either INT or FLOAT */
@@ -79,6 +98,16 @@ printVals : ',' expr							{
 																		addStr($2, $$.stringsLen);
 																		$$.stringsLen++;
 																	}
+				  | ',' id   							{ 
+																		checkIfVarExist($2.varName);
+																		if($2.type == 0){
+																			addStr($2.strVal, $$.stringsLen);
+																			$$.stringsLen++;
+																		} else if($2.type == 1){
+																			$$.numbers[$$.numbersLen] = $2.numVal;
+																			$$.numbersLen++;
+																		}
+					 												}
 				  | printVals ',' expr    {
 																		$$.numbers[$$.numbersLen] = $3;
 																		$$.numbersLen++;
@@ -92,30 +121,47 @@ printVals : ',' expr							{
 /* expected inputs for the arithmetic statement */
 expr    	:	term															{$$ = $1;}
        	    |	expr '+' term													{$$ = $1 + $3;}
+						|	id '+' factor													{$$ = checkThisNumVar($1.varName) + $3;}
+        		|	factor '+' id													{$$ = $1 + checkThisNumVar($3.varName);}
        	    |	expr '-' term													{$$ = $1 - $3;}
+						|	id '-' factor													{$$ = checkThisNumVar($1.varName) - $3;}
+        		|	factor '-' id													{$$ = $1 - checkThisNumVar($3.varName);}
        	    ;
 
 term		:	factor															{$$ = $1;}
         	|	term '*' factor													{$$ = $1 * $3;}		
         	|	term '/' factor													{$$ = $1 / $3;}
+					|	id '*' factor													{$$ = checkThisNumVar($1.varName) * $3;}
+        	|	factor '*' id													{$$ = $1 * checkThisNumVar($3.varName);}
+        	|	id '/' factor													{$$ = checkThisNumVar($1.varName) / $3;}
+        	|	factor '/' id													{$$ = $1 / checkThisNumVar($3.varName);}
         	;
 
 factor		:	values															{$$ = $1;}
-			|	'(' expr ')'													{$$ = $2;}		
+			|	'(' expr ')'													{$$ = $2;}	
 			;
 
 /* term can be either int or float or variable holding the value */
-values	:	NIDENTIFIER												{$$ = checkThisNumVar($1);}
-			  |	INTEGERS													{$$ = $1;}
+values	:	INTEGERS													{$$ = $1;}
 		  	|	DECIMALS													{$$ = $1;}
 		    ;
 
-str			:	SIDENTIFIER												{$$ = checkThisCharVar($1);}
-				|	CHARACTER													{$$ = $1;}
+str			:	CHARACTER													{$$ = $1;}
 				| STRING														{$$ = $1;}
 				;
 
-
+id			:	IDENTIFIER												{
+																								int type = checkReturnType($1);
+																								if(type == 1){
+																									$$.strVal = checkThisCharVar($1);
+																									$$.type = 0;
+																								} else if(type == 2){
+																									$$.numVal = checkThisNumVar($1);
+																									$$.type = 1;
+																								}
+																							$$.varName = $1;
+																						} 
+				;
 
 
 %%                    
