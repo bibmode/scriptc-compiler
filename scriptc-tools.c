@@ -469,7 +469,7 @@ void printFinalString(char *strFinal){
 void printStruct(char* inputStr, float numbers[], int numbersLen, int stringsLen) {
 	int numSpecifiers=0, strSpecifiers=0, floatSpecifiers=0, integerSpecifiers=0, charSpecifiers=0, stringSpecifiers=0;
 	
-	int posfloat, posint, poschar, posstr, counter;
+	int posfloat=0, posint=0, poschar=0, posstr=0, counter;
 	char strFinal[200], strInitial[200], strValue[100];
 
 	floatSpecifiers = count(inputStr, "%f");
@@ -526,28 +526,23 @@ void printStruct(char* inputStr, float numbers[], int numbersLen, int stringsLen
 			if(stringSpecifiers) posstr = getPosition(strFinal, "%s"); 
 
 			if(posstr && poschar && (posstr < poschar)){
-				// printf("if 1 -> %s\n", stringsDisplay[counter]);
 				sprintf(strValue, "%s", stringsDisplay[counter]);
 				substringInsert(posstr, strFinal, strValue);
 
 			} else if (poschar && posstr && (posstr > poschar)) {
-				// printf("if 2 -> %s\n", stringsDisplay[counter]);
 				sprintf(strValue, "%c", stringsDisplay[counter][0]);
 				substringInsert(poschar, strFinal, strValue);
 
 			} else if (!posstr && poschar){
-				// printf("if 3 -> %s\n", stringsDisplay[counter]);
 				sprintf(strValue, "%c", stringsDisplay[counter][0]);
 				substringInsert(poschar, strFinal, strValue);
 
 			} else if(!poschar && posstr){
-				// printf("if 4 -> %s\n", stringsDisplay[counter]);
 				sprintf(strValue, "%s", stringsDisplay[counter]);
 				substringInsert(posstr, strFinal, strValue);
 			}
 
 			poschar = posstr = 0;
-
 		} 
 	}
 
