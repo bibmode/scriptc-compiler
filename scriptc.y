@@ -116,6 +116,16 @@ printVals : ',' expr							{
 																		addStr($3, $$.stringsLen);
 																		$$.stringsLen++;
 																	}
+					| printVals ',' id   		{ 
+																		checkIfVarExist($3.varName);
+																		if($3.type == 0){
+																			addStr($3.strVal, $$.stringsLen);
+																			$$.stringsLen++;
+																		} else if($3.type == 1){
+																			$$.numbers[$$.numbersLen] = $3.numVal;
+																			$$.numbersLen++;
+																		}
+					 												}
 					;
 
 /* expected inputs for the arithmetic statement */
