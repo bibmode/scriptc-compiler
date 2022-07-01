@@ -63,8 +63,13 @@ numVar_statements	:	id ':' type								{checkVarDup($1.varName,$3);}
 					|	id ':' type '=' expr							{checkVarDup($1.varName,$3); saveThisNumVal($1.varName,$5); updateNumVal($1.varName,$5);}
 					;
 
-letVar_statements	:	id ':' CHAR								{checkVarDup($1.varName,$3);}
-					|	id '=' str												{checkCharVarExist($1.varName,$3);}
+letVar_statements	:	id ':' CHAR								{
+																								printf("line 66\n");
+																								checkVarDup($1.varName,$3);
+																							}
+					|	id '=' str												{
+																								checkCharVarExist($1.varName,$3);
+																							}
 					|	id ':' CHAR '=' str								{
 																												checkVarDup($1.varName,$3); 
 																												saveThisCharVal($1.varName,$5); 
@@ -134,22 +139,22 @@ expr    	:	term															{$$ = $1;}
 						|	id '+' factor										{$$ = checkThisNumVar($1.varName) + $3;}
         		|	factor '+' id										{$$ = $1 + checkThisNumVar($3.varName);}
        	    |	expr '-' term										{$$ = $1 - $3;}
-						|	id '-' factor										{$$ = checkThisNumVar($1.varName) - $3;}
-        		|	factor '-' id										{$$ = $1 - checkThisNumVar($3.varName);}
+						|	id '-' factor									{$$ = checkThisNumVar($1.varName) - $3;}
+        		|	factor '-' id									{$$ = $1 - checkThisNumVar($3.varName);}
        	    ;
 
-term		:	factor															{$$ = $1;}
-        	|	term '*' factor										{$$ = $1 * $3;}		
-        	|	term '/' factor										{$$ = $1 / $3;}
-					|	id '*' factor											{$$ = checkThisNumVar($1.varName) * $3;}
-        	|	factor '*' id											{$$ = $1 * checkThisNumVar($3.varName);}
-        	|	id '/' factor											{$$ = checkThisNumVar($1.varName) / $3;}
-        	|	factor '/' id											{$$ = $1 / checkThisNumVar($3.varName);}
+term		:	factor														{$$ = $1;}
+        	|	term '*' factor									{$$ = $1 * $3;}		
+        	|	term '/' factor									{$$ = $1 / $3;}
+					|	id '*' factor										{$$ = checkThisNumVar($1.varName) * $3;}
+        	|	factor '*' id										{$$ = $1 * checkThisNumVar($3.varName);}
+        	|	id '/' factor										{$$ = checkThisNumVar($1.varName) / $3;}
+        	|	factor '/' id										{$$ = $1 / checkThisNumVar($3.varName);}
         	;
 
-factor		:	values														{$$ = $1;}
-			|	'(' expr ')'													{$$ = $2;}	
-			;
+factor		:	values													{$$ = $1;}
+					|	'(' expr ')'										{$$ = $2;}	
+					;
 
 /* term can be either int or float or variable holding the value */
 values	:	INTEGERS													{$$ = $1;}
@@ -163,7 +168,9 @@ str			:	CHARACTER													{$$ = $1;}
 id			:	IDENTIFIER												{
 																								int typeId = checkReturnType($1);
 																								if(typeId == 1){
-																									$$.strVal = checkThisCharVar($1);
+																									if(checkThisCharVar($1) != NULL){
+																										$$.strVal = checkThisCharVar($1);
+																									}
 																									$$.type = 0;
 																								} else if(typeId == 2){
 																									$$.numVal = checkThisNumVar($1);

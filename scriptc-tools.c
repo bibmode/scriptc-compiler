@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#include <ctype.h>
 #include <math.h>
 
 int line = 1;		// for getting incremented line number indexes
@@ -12,7 +13,7 @@ typedef struct indentifiers{
 	char typ[1000];		// typ stores variable's type
 	int ival;		// ival stores int type values
 	float fval;		// fval stores float type values
-	char cval[1000];		// cval stores char type values
+	char cval[1000];   // cval stores char type values
 } identifier;
 
 float symbols[1000];		// symbols store values to the identifier
@@ -34,7 +35,7 @@ void printFinalString(char *strFinal);
 void printStruct(char *inputStr, float numbers[], int numbersLen, int stringsLen);
 
 void test(char *str){
-	printf("%s", str);
+	printf("\ntest -> %s\n", str);
 }
 
 char *getStringFromId(char *str){
@@ -64,6 +65,8 @@ void checkIfVarExist(char *variable){
 int checkReturnType(char *variable){
 	int i;
 	int flag = 0;
+
+	
 	
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
@@ -112,17 +115,38 @@ float getNumValue(char* variable){
 	}
 }
 
+int checkForValue(char *str){
+	int val = 0;
+	char *temp;
+
+	int lenOfStr = 0;
+	lenOfStr = strlen(str);
+
+	// printf("line 123 -> %s",temp);
+	if(lenOfStr != 0){
+		val = 1;
+	}
+
+	return val;
+}
+
 
 /* getCharValue gets the given variable's char type value and return it to the IDENTIFIER token */
 char* getCharValue(char* variable){	
-	int i;
+	int i, valCheck;
 	
 	int bucket = compIdxVar(variable);		// recognized variable index will be initialized to the bucket variable
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){	
 			if(strcmp(id[i].typ,"char")==0){
-				strcpy(char_symbols[bucket],id[i].cval);
-				return char_symbols[bucket];		// returns the current variable's recognized char type value according to its index
+				valCheck = checkForValue(id[i].cval);
+				if(valCheck){
+					strcpy(char_symbols[bucket],id[i].cval);
+					return char_symbols[bucket]; // returns the current variable's recognized char type value according to its index
+				} else {
+					return NULL;
+				}
+						
 			}
 		}
 	}
@@ -157,6 +181,8 @@ void updateCharVal(char* variable, char* value){
 	int i;
 	
 	int bucket = compIdxVar(variable);
+
+	// printf("\nupdatethischarval is working\n");
 	
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
@@ -201,10 +227,12 @@ void saveThisNumVal(char* variable, float value){
 /* saveThisCharVal saves the value (char type) to the struct identifiers */
 void saveThisCharVal(char* variable, char* value){
 	int i;
+
 	
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
 			if(strcmp(id[i].typ,"char")==0){
+			
 				strcpy(id[indexVar].cval,value);
 				break;		
 			}
@@ -262,9 +290,12 @@ void checkNumVarExist(char* variable, float value){
 void checkCharVarExist(char* variable, char* value){
 	int i;
 	int flag = 0;
+
+
 	for(i=0;i<indexVar;i++){
 		if(strcmp(id[i].var,variable)==0){
 			if(strcmp(id[i].typ,"char")==0){
+
 				flag = 1;
 				break;			
 			}
@@ -300,7 +331,6 @@ float checkThisNumVar(char* variable){
 				break;
 			}
 			else if (strcmp(id[i].typ,"char")==0) {
-				printf("num var running\n");
 				flag = 2;
 				break;
 			}

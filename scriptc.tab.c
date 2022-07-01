@@ -496,10 +496,10 @@ static const yytype_int8 yyrhs[] =
 static const yytype_uint8 yyrline[] =
 {
        0,    50,    50,    51,    54,    55,    56,    57,    61,    62,
-      63,    66,    67,    68,    73,    82,    83,    88,    89,    93,
-      97,   101,   111,   115,   119,   132,   133,   134,   135,   136,
-     137,   138,   141,   142,   143,   144,   145,   146,   147,   150,
-     151,   155,   156,   159,   160,   163
+      63,    66,    70,    73,    78,    87,    88,    93,    94,    98,
+     102,   106,   116,   120,   124,   137,   138,   139,   140,   141,
+     142,   143,   146,   147,   148,   149,   150,   151,   152,   155,
+     156,   160,   161,   164,   165,   168
 };
 #endif
 
@@ -1465,18 +1465,23 @@ yyreduce:
   case 11:
 /* Line 1792 of yacc.c  */
 #line 66 "scriptc.y"
-    {checkVarDup((yyvsp[(1) - (3)].id).varName,(yyvsp[(3) - (3)].s));}
+    {
+																								printf("line 66\n");
+																								checkVarDup((yyvsp[(1) - (3)].id).varName,(yyvsp[(3) - (3)].s));
+																							}
     break;
 
   case 12:
 /* Line 1792 of yacc.c  */
-#line 67 "scriptc.y"
-    {checkCharVarExist((yyvsp[(1) - (3)].id).varName,(yyvsp[(3) - (3)].s));}
+#line 70 "scriptc.y"
+    {
+																								checkCharVarExist((yyvsp[(1) - (3)].id).varName,(yyvsp[(3) - (3)].s));
+																							}
     break;
 
   case 13:
 /* Line 1792 of yacc.c  */
-#line 68 "scriptc.y"
+#line 73 "scriptc.y"
     {
 																												checkVarDup((yyvsp[(1) - (5)].id).varName,(yyvsp[(3) - (5)].s)); 
 																												saveThisCharVal((yyvsp[(1) - (5)].id).varName,(yyvsp[(5) - (5)].s)); 
@@ -1486,7 +1491,7 @@ yyreduce:
 
   case 14:
 /* Line 1792 of yacc.c  */
-#line 73 "scriptc.y"
+#line 78 "scriptc.y"
     {
 																												checkVarDup((yyvsp[(1) - (5)].id).varName,(yyvsp[(3) - (5)].s)); 
 																												char *strVal = getStringFromId((yyvsp[(5) - (5)].id).varName);
@@ -1497,31 +1502,31 @@ yyreduce:
 
   case 15:
 /* Line 1792 of yacc.c  */
-#line 82 "scriptc.y"
+#line 87 "scriptc.y"
     {(yyval.s) = (yyvsp[(1) - (1)].s);}
     break;
 
   case 16:
 /* Line 1792 of yacc.c  */
-#line 83 "scriptc.y"
+#line 88 "scriptc.y"
     {(yyval.s) = (yyvsp[(1) - (1)].s);}
     break;
 
   case 17:
 /* Line 1792 of yacc.c  */
-#line 88 "scriptc.y"
+#line 93 "scriptc.y"
     {printValues((yyvsp[(3) - (3)].s));}
     break;
 
   case 18:
 /* Line 1792 of yacc.c  */
-#line 89 "scriptc.y"
+#line 94 "scriptc.y"
     {printStruct((yyvsp[(3) - (4)].s), (yyvsp[(4) - (4)].p).numbers, (yyvsp[(4) - (4)].p).numbersLen, (yyvsp[(4) - (4)].p).stringsLen);}
     break;
 
   case 19:
 /* Line 1792 of yacc.c  */
-#line 93 "scriptc.y"
+#line 98 "scriptc.y"
     {
 																		(yyval.p).numbers[(yyval.p).numbersLen] = (yyvsp[(2) - (2)].f);
 																		(yyval.p).numbersLen++;
@@ -1530,7 +1535,7 @@ yyreduce:
 
   case 20:
 /* Line 1792 of yacc.c  */
-#line 97 "scriptc.y"
+#line 102 "scriptc.y"
     {
 																		addStr((yyvsp[(2) - (2)].s), (yyval.p).stringsLen);
 																		(yyval.p).stringsLen++;
@@ -1539,7 +1544,7 @@ yyreduce:
 
   case 21:
 /* Line 1792 of yacc.c  */
-#line 101 "scriptc.y"
+#line 106 "scriptc.y"
     { 
 																		checkIfVarExist((yyvsp[(2) - (2)].id).varName);
 																		if((yyvsp[(2) - (2)].id).type == 0){
@@ -1554,7 +1559,7 @@ yyreduce:
 
   case 22:
 /* Line 1792 of yacc.c  */
-#line 111 "scriptc.y"
+#line 116 "scriptc.y"
     {
 																		(yyval.p).numbers[(yyval.p).numbersLen] = (yyvsp[(3) - (3)].f);
 																		(yyval.p).numbersLen++;
@@ -1563,7 +1568,7 @@ yyreduce:
 
   case 23:
 /* Line 1792 of yacc.c  */
-#line 115 "scriptc.y"
+#line 120 "scriptc.y"
     {
 																		addStr((yyvsp[(3) - (3)].s), (yyval.p).stringsLen);
 																		(yyval.p).stringsLen++;
@@ -1572,7 +1577,7 @@ yyreduce:
 
   case 24:
 /* Line 1792 of yacc.c  */
-#line 119 "scriptc.y"
+#line 124 "scriptc.y"
     { 
 																		checkIfVarExist((yyvsp[(3) - (3)].id).varName);
 																		if((yyvsp[(3) - (3)].id).type == 0){
@@ -1587,131 +1592,133 @@ yyreduce:
 
   case 25:
 /* Line 1792 of yacc.c  */
-#line 132 "scriptc.y"
+#line 137 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (1)].f);}
     break;
 
   case 26:
 /* Line 1792 of yacc.c  */
-#line 133 "scriptc.y"
+#line 138 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (3)].f) + (yyvsp[(3) - (3)].f);}
     break;
 
   case 27:
 /* Line 1792 of yacc.c  */
-#line 134 "scriptc.y"
+#line 139 "scriptc.y"
     {(yyval.f) = checkThisNumVar((yyvsp[(1) - (3)].id).varName) + (yyvsp[(3) - (3)].f);}
     break;
 
   case 28:
 /* Line 1792 of yacc.c  */
-#line 135 "scriptc.y"
+#line 140 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (3)].f) + checkThisNumVar((yyvsp[(3) - (3)].id).varName);}
     break;
 
   case 29:
 /* Line 1792 of yacc.c  */
-#line 136 "scriptc.y"
+#line 141 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (3)].f) - (yyvsp[(3) - (3)].f);}
     break;
 
   case 30:
 /* Line 1792 of yacc.c  */
-#line 137 "scriptc.y"
+#line 142 "scriptc.y"
     {(yyval.f) = checkThisNumVar((yyvsp[(1) - (3)].id).varName) - (yyvsp[(3) - (3)].f);}
     break;
 
   case 31:
 /* Line 1792 of yacc.c  */
-#line 138 "scriptc.y"
+#line 143 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (3)].f) - checkThisNumVar((yyvsp[(3) - (3)].id).varName);}
     break;
 
   case 32:
 /* Line 1792 of yacc.c  */
-#line 141 "scriptc.y"
+#line 146 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (1)].f);}
     break;
 
   case 33:
 /* Line 1792 of yacc.c  */
-#line 142 "scriptc.y"
+#line 147 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (3)].f) * (yyvsp[(3) - (3)].f);}
     break;
 
   case 34:
 /* Line 1792 of yacc.c  */
-#line 143 "scriptc.y"
+#line 148 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (3)].f) / (yyvsp[(3) - (3)].f);}
     break;
 
   case 35:
 /* Line 1792 of yacc.c  */
-#line 144 "scriptc.y"
+#line 149 "scriptc.y"
     {(yyval.f) = checkThisNumVar((yyvsp[(1) - (3)].id).varName) * (yyvsp[(3) - (3)].f);}
     break;
 
   case 36:
 /* Line 1792 of yacc.c  */
-#line 145 "scriptc.y"
+#line 150 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (3)].f) * checkThisNumVar((yyvsp[(3) - (3)].id).varName);}
     break;
 
   case 37:
 /* Line 1792 of yacc.c  */
-#line 146 "scriptc.y"
+#line 151 "scriptc.y"
     {(yyval.f) = checkThisNumVar((yyvsp[(1) - (3)].id).varName) / (yyvsp[(3) - (3)].f);}
     break;
 
   case 38:
 /* Line 1792 of yacc.c  */
-#line 147 "scriptc.y"
+#line 152 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (3)].f) / checkThisNumVar((yyvsp[(3) - (3)].id).varName);}
     break;
 
   case 39:
 /* Line 1792 of yacc.c  */
-#line 150 "scriptc.y"
+#line 155 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (1)].f);}
     break;
 
   case 40:
 /* Line 1792 of yacc.c  */
-#line 151 "scriptc.y"
+#line 156 "scriptc.y"
     {(yyval.f) = (yyvsp[(2) - (3)].f);}
     break;
 
   case 41:
 /* Line 1792 of yacc.c  */
-#line 155 "scriptc.y"
+#line 160 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (1)].i);}
     break;
 
   case 42:
 /* Line 1792 of yacc.c  */
-#line 156 "scriptc.y"
+#line 161 "scriptc.y"
     {(yyval.f) = (yyvsp[(1) - (1)].f);}
     break;
 
   case 43:
 /* Line 1792 of yacc.c  */
-#line 159 "scriptc.y"
+#line 164 "scriptc.y"
     {(yyval.s) = (yyvsp[(1) - (1)].c);}
     break;
 
   case 44:
 /* Line 1792 of yacc.c  */
-#line 160 "scriptc.y"
+#line 165 "scriptc.y"
     {(yyval.s) = (yyvsp[(1) - (1)].s);}
     break;
 
   case 45:
 /* Line 1792 of yacc.c  */
-#line 163 "scriptc.y"
+#line 168 "scriptc.y"
     {
 																								int typeId = checkReturnType((yyvsp[(1) - (1)].s));
 																								if(typeId == 1){
-																									(yyval.id).strVal = checkThisCharVar((yyvsp[(1) - (1)].s));
+																									if(checkThisCharVar((yyvsp[(1) - (1)].s)) != NULL){
+																										(yyval.id).strVal = checkThisCharVar((yyvsp[(1) - (1)].s));
+																									}
 																									(yyval.id).type = 0;
 																								} else if(typeId == 2){
 																									(yyval.id).numVal = checkThisNumVar((yyvsp[(1) - (1)].s));
@@ -1723,7 +1730,7 @@ yyreduce:
 
 
 /* Line 1792 of yacc.c  */
-#line 1727 "scriptc.tab.c"
+#line 1734 "scriptc.tab.c"
       default: break;
     }
   /* User semantic actions sometimes alter yychar, and that requires
@@ -1955,7 +1962,7 @@ yyreturn:
 
 
 /* Line 2055 of yacc.c  */
-#line 177 "scriptc.y"
+#line 184 "scriptc.y"
                     
 
 int main (void) {
